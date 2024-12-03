@@ -1,101 +1,157 @@
+"use client";
+
 import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
+import { motion } from "framer-motion";
+import { Title } from "@/components/shared/title";
 
-export default function Home() {
+export default function AboutPage() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="min-h-screen">
+      <div className="max-w-7xl mx-auto px-4 py-16">
+        <motion.h1
+          className="mb-12 text-center text-4xl font-bold text-blue-900"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Title
+            title="Welcome to Our NATURAB"
+            className="mb-12"
+            titleSize="text-md"
+          />
+        </motion.h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+        {/* Vision Mission Values Section */}
+        <motion.div
+          className="mb-24 grid gap-8 md:grid-cols-3"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <Card className="overflow-hidden shadow-lg transition-transform hover:scale-105">
+            <CardContent className="p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+              <h2 className="mb-4 text-2xl font-bold">VISION</h2>
+              <p className="text-blue-100 py-6">
+                To be the preferred apparel accessories supplier to
+                world-renowned branded apparel manufacturers.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="flex items-center justify-center p-6 shadow-lg transition-transform hover:scale-105">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              src="/assets/logo.png"
+              alt="Naturub Logo Large"
+              width={300}
+              height={300}
+              className="h-auto w-48"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          </Card>
+
+          <Card className="overflow-hidden shadow-lg transition-transform hover:scale-105">
+            <CardContent className="p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+              <h2 className="mb-4 text-2xl font-bold">MISSION</h2>
+              <p className="text-blue-100">
+                Striving to manufacture products of high quality and consistency
+                which are marketed globally and locally at competitive prices
+                with the assurance of timely deliveries to customer&apos;s
+                doorstep.
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Business Areas */}
+        <motion.div
+          className="mb-24"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-5">
+            {[
+              { title: "History", icon: "📚" },
+              { title: "Business & Products", icon: "🏭" },
+              { title: "Capacity & Facilities", icon: "⚙️" },
+              { title: "Global Presence & Awards", icon: "🌍" },
+              { title: "Naturub Group", icon: "🏢" },
+            ].map((item, index) => (
+              <motion.div
+                key={item.title + index}
+                className="text-center"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-blue-600 text-3xl text-white shadow-lg">
+                  {item.icon}
+                </div>
+                <h3 className="text-sm font-medium text-blue-900">
+                  {item.title}
+                </h3>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Management Section */}
+        <motion.div
+          className="mb-24"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <h2 className="mb-12 text-center text-3xl font-bold text-blue-900">
+            Our Management
+          </h2>
+          <div className="grid gap-8 md:grid-cols-2">
+            {[
+              {
+                name: "Tissa Elapperuma",
+                role: "Founder/Chairman/Managing Director",
+                description:
+                  "A visionary leader with extensive experience in the apparel industry, leading Naturub Group to become a global leader in apparel accessories.",
+                img: "/assets/founder.jpg",
+              },
+              {
+                name: "Yasith Elapperuma",
+                role: "COO",
+                description:
+                  "Leading operations with innovative strategies and deep industry knowledge, driving sustainable growth and technological advancement.",
+                img: "/assets/coo.jpg",
+              },
+            ].map((manager, index) => (
+              <motion.div
+                key={manager.name + index}
+                whileHover={{ scale: 1.03 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <Card className="overflow-hidden shadow-lg">
+                  <CardContent className="p-0">
+                    <div className="relative">
+                      <Image
+                        src={`${manager.img}`}
+                        alt={`${manager.name}`}
+                        width={600}
+                        height={400}
+                        className="w-full h-96 object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                      <div className="absolute bottom-4 left-4 text-white">
+                        <h3 className="text-2xl font-bold">{manager.name}</h3>
+                        <p className="text-sm text-blue-200">{manager.role}</p>
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      <p className="text-gray-600">{manager.description}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }
