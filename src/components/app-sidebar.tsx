@@ -1,175 +1,134 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
   AudioWaveform,
-  BookOpen,
   Bot,
+  BookOpen,
   Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
   SquareTerminal,
-} from "lucide-react"
-
-import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
+  Settings2,
+  Frame,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import { NavMain } from "@/components/nav-main";
+import { NavUser } from "@/components/nav-user";
+import { TeamSwitcher } from "@/components/team-switcher";
+import axiosInstance from "@/helper/axios/axiosInstance";
+import { useAppSelector } from "@/redux/hooks";
+import { userInfo } from "@/service/auth.service";
 
-// This is sample data.
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
-  navMain: [
-    {
-      title: "Playground",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
+interface MenuItem {
+  $id: string;
+  MenuName: string;
+  MenuID: number;
+  MainManuID: number;
+  MenuType: string;
+  EmpID: number;
+  EmpName: string | null;
+  Type: string | null;
+  ListMenuID: string | null;
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+interface NavItem {
+  title: string;
+  url: string;
+  icon?: React.ElementType;
+  isActive?: boolean;
+  items?: { title: string; url: string }[];
+}
+
+export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
+  const [sidebarMenu, setSidebarMenu] = React.useState<MenuItem[]>([]);
+  const [navMain, setNavMain] = React.useState<NavItem[]>([]);
+
+  const userData = useAppSelector((state) => state.user.userData);
+
+  const data = {
+    user: {
+      name: `${userData?.FullName}`,
+      email: "m@example.com",
+      avatar: "/avatars/shadcn.jpg",
+    },
+    teams: [
+      { name: "Naturub", plan: "Accessories Bangladesh" },
+      { name: "Acme Corp.", logo: AudioWaveform, plan: "Startup" },
+      { name: "Evil Corp.", logo: Command, plan: "Free" },
+    ],
+  };
+
+  React.useEffect(() => {
+    const getSidebar = async () => {
+      const user = await userInfo();
+      const req = await axiosInstance.post("/api/GatePass/GetUserAccessMenus", {
+        EmpID: userData?.EmpID,
+        Type: 1,
+      });
+      const response: MenuItem[] = req.data;
+      console.log("sidebar manu: ", response);
+      const transformedNavMain = response
+        .filter((item) => item.MainManuID === 0)
+        .map((mainItem) => ({
+          title: mainItem.MenuName,
+          url: `/${mainItem.MenuType}`,
+          icon: getIcon(mainItem.MenuType),
+          items: response
+            .filter((subItem) => subItem.MainManuID === mainItem.MenuID)
+            .map((subItem) => ({
+              title: subItem.MenuName,
+              url: `/${subItem.MenuType}`,
+            })),
+        }));
+
+      setNavMain(transformedNavMain);
+      setSidebarMenu(response);
+    };
+
+    getSidebar();
+  }, [userData]);
+
+  const getIcon = (menuType: string): React.ElementType => {
+    switch (menuType) {
+      case "gate-pass":
+        return SquareTerminal;
+      case "request":
+        return Bot;
+      case "status":
+        return BookOpen;
+      case "security":
+        return Settings2;
+      default:
+        return Frame;
+    }
+  };
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        {/* @ts-ignore */}
+        {navMain && <NavMain items={navMain} />}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {userData && (
+          <NavUser
+            user={{
+              name: userData.FullName,
+              section: userData.SectionName,
+              avatar: `data:image/png;base64,${userData.ImageBase64}`,
+            }}
+          />
+        )}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
