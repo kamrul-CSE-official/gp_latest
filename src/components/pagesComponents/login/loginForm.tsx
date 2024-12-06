@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { EyeIcon, EyeOff, LogIn } from "lucide-react";
 import { useLoginUsersMutation } from "@/redux/features/user/userApi";
 import { toast } from "react-toastify";
+import { AUTH_KEY } from "@/constant/storage.key";
 
 type Inputs = {
   UserName: string;
@@ -18,7 +20,8 @@ type Inputs = {
 
 export default function LoginForm() {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
-  const [authData, { isLoading, isSuccess }] = useLoginUsersMutation();
+  const [authData, { isLoading, isSuccess, data: loginData }] =
+    useLoginUsersMutation();
   const router = useRouter();
 
   const {
@@ -29,13 +32,23 @@ export default function LoginForm() {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    authData(data);
+    try {
+      await authData(data).unwrap();
+      if (isSuccess) {
+        const token = loginData?.token;
 
-    if (isSuccess) {
-      router.push("/deshboard");
-      toast.success("Login successfull.");
-      reset();
-    } else {
+        // Store the token in cookies
+        Cookies.set(AUTH_KEY, token, { expires: 1, secure: true }); // Set expiry to 1 day
+
+        // Navigate to the dashboard
+        router.replace("/dashboard");
+        toast.success("Login successful.");
+        reset();
+      } else {
+        toast.error("Invalid credentials. Please try again!");
+      }
+    } catch (error) {
+      console.error(error);
       toast.error("Something went wrong!");
     }
   };
@@ -46,7 +59,7 @@ export default function LoginForm() {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* User Name Input */}
-            <div className="space-y-2">
+            <div className="space-y-2 mt-2">
               <Label htmlFor="UserName">User Name</Label>
               <Input
                 id="UserName"
