@@ -6,8 +6,35 @@ import { AlignStartVerticalIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Title } from "@/components/shared/title";
+// import {
+//   useGetProductsQuery,
+//   usePostCommentMutation,
+// } from "@/redux/api/apiSlice";
 
 export function HeroSection() {
+  /*
+  const { data, isLoading, error } = useGetProductsQuery(undefined);
+  const { data: singleProduct } = useGetProductsQuery(12);
+  const [postComment, { isError, isLoading: postLoading, data: postData }] =
+    usePostCommentMutation();
+  console.log(postLoading, postData, isError);
+  const options = {
+    id: 12,
+    data: { comment: "123" },
+  };
+  postComment(options);
+
+  console.log(
+    "RTK= data: ",
+    data,
+    " Loading: ",
+    isLoading,
+    " Error: ",
+    error,
+    " Single product: ",
+    singleProduct
+  );
+  */
   return (
     <section className="text-center">
       <motion.h1

@@ -2,17 +2,14 @@
 
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { setToLocalStorageAsStringify } from "@/utils/local-storage";
-import { AUTH_KEY } from "@/constant/storage.key";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { EyeIcon, EyeOff, LogIn } from "lucide-react";
-import { usePostMutation } from "@/utils/usePostQuery";
+import { useLoginUsersMutation } from "@/redux/features/user/userApi";
 import { toast } from "react-toastify";
-import { setCookies } from "@/service/auth.service";
 
 type Inputs = {
   UserName: string;
@@ -21,32 +18,26 @@ type Inputs = {
 
 export default function LoginForm() {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
+  const [authData, { isLoading, isSuccess }] = useLoginUsersMutation();
   const router = useRouter();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<Inputs>();
 
-  const mutation = usePostMutation("/api/Login/IsValidUserWithJWTToken", {
-    onSuccess: (data: { message: string; jwtToken: string }) => {
-      const { jwtToken } = data;
-      if (jwtToken) {
-        setCookies(AUTH_KEY, jwtToken);
-        setToLocalStorageAsStringify(AUTH_KEY, jwtToken);
-        router.replace("/dashboard");
-        toast.success("Login successfully.");
-      }
-    },
-    onError: (error: any) => {
-      const errorMessage =
-        error?.response?.data?.message || "Something went wrong!";
-    },
-  });
-
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    mutation.mutate(data);
+    authData(data);
+
+    if (isSuccess) {
+      router.push("/deshboard");
+      toast.success("Login successfull.");
+      reset();
+    } else {
+      toast.error("Something went wrong!");
+    }
   };
 
   return (
@@ -100,11 +91,11 @@ export default function LoginForm() {
             <Button
               type="submit"
               className="w-full"
-              disabled={mutation.isLoading}
+              disabled={isLoading}
               size="lg"
             >
-              {mutation.isLoading ? "Loading..." : "Login"}
-              {!mutation.isLoading && <LogIn size={20} className="ml-2" />}
+              {isLoading ? "Loading..." : "Login"}
+              {!isLoading && <LogIn size={20} className="ml-2" />}
             </Button>
           </form>
         </CardContent>
