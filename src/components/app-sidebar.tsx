@@ -23,6 +23,7 @@ import { TeamSwitcher } from "@/components/team-switcher";
 import axiosInstance from "@/helper/axios/axiosInstance";
 import { useAppSelector } from "@/redux/hooks";
 import { userInfo } from "@/service/auth.service";
+import { useSidebarMenuMutation } from "@/redux/features/ui/uiApi";
 
 interface MenuItem {
   $id: string;
@@ -47,6 +48,8 @@ interface NavItem {
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const [sidebarMenu, setSidebarMenu] = React.useState<MenuItem[]>([]);
   const [navMain, setNavMain] = React.useState<NavItem[]>([]);
+  const [requestForSidebar, { data: sidebar, isLoading }] =
+    useSidebarMenuMutation();
 
   const userData = useAppSelector((state) => state.user.userData);
 
@@ -65,12 +68,8 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
 
   React.useEffect(() => {
     const getSidebar = async () => {
-      const user = await userInfo();
-      const req = await axiosInstance.post("/api/GatePass/GetUserAccessMenus", {
-        EmpID: userData?.EmpID,
-        Type: 1,
-      });
-      const response: MenuItem[] = req.data;
+      requestForSidebar({ EmpId: userData?.EmpID, Type: 1 });
+      const response: MenuItem[] = sidebar;
       console.log("sidebar manu: ", response);
       const transformedNavMain = response
         .filter((item) => item.MainManuID === 0)
