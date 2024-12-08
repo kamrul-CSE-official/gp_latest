@@ -20,9 +20,7 @@ import {
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import { TeamSwitcher } from "@/components/team-switcher";
-import axiosInstance from "@/helper/axios/axiosInstance";
 import { useAppSelector } from "@/redux/hooks";
-import { userInfo } from "@/service/auth.service";
 import { useSidebarMenuMutation } from "@/redux/features/ui/uiApi";
 
 interface MenuItem {
@@ -50,8 +48,9 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const [navMain, setNavMain] = React.useState<NavItem[]>([]);
   const [requestForSidebar, { data: sidebar, isLoading }] =
     useSidebarMenuMutation();
-
   const userData = useAppSelector((state) => state.user.userData);
+
+  console.log("sidebar: ", sidebar, " Loading: ", isLoading);
 
   const data = {
     user: {
@@ -86,11 +85,12 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
         }));
 
       setNavMain(transformedNavMain);
+      console.log("update: ", response);
       setSidebarMenu(response);
     };
 
     getSidebar();
-  }, [userData]);
+  }, []);
 
   const getIcon = (menuType: string): React.ElementType => {
     switch (menuType) {
@@ -112,10 +112,7 @@ export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
-      <SidebarContent>
-        {/* @ts-ignore */}
-        {navMain && <NavMain items={navMain} />}
-      </SidebarContent>
+      <SidebarContent>{navMain && <NavMain items={navMain} />}</SidebarContent>
       <SidebarFooter>
         {userData && (
           <NavUser
