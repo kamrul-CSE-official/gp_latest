@@ -1,12 +1,13 @@
 export interface IUserinfo {
-  UserName: string;
-  UserID: number;
-  EmpID: number;
-  CompanyID: number;
-  CostCenterID: number;
-  SubCostCenterID: number;
-  ServiceDepartmentID: number;
+  username: string;
+  UserID?: number;
+  EmpID?: number | string;
+  CompanyID?: number;
+  CostCenterID?: number;
+  SubCostCenterID?: number;
+  ServiceDepartmentID?: number;
   iat: number;
+  exp: number;
 }
 
 

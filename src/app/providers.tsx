@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { store } from "@/redux/store";
 import { Provider } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";

@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sidebar";
 import Image from "next/image";
 import Link from "next/link";
+import Typewriter from "typewriter-effect";
 
 export function TeamSwitcher({
   teams,
@@ -22,7 +23,7 @@ export function TeamSwitcher({
     plan: string;
   }[];
 }) {
-  const [activeTeam, setActiveTeam] = React.useState(teams[0]);
+  const [activeTeam] = React.useState(teams[0]);
 
   return (
     <Link href="/">
@@ -46,7 +47,15 @@ export function TeamSwitcher({
                   <span className="truncate font-semibold">
                     {activeTeam.name}
                   </span>
-                  <span className="truncate text-xs">{activeTeam.plan}</span>
+                  <span className="truncate text-xs">
+                    <Typewriter
+                      options={{
+                        strings: [`${activeTeam.plan}`, `${activeTeam.plan}`],
+                        autoStart: true,
+                        loop: true,
+                      }}
+                    />
+                  </span>
                 </div>
               </SidebarMenuButton>
             </DropdownMenuTrigger>

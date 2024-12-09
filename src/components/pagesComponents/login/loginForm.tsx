@@ -33,12 +33,12 @@ export default function LoginForm() {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
-      await authData(data).unwrap();
+      await authData(data);
       if (isSuccess) {
         const token = loginData?.token;
 
         // Store the token in cookies
-        Cookies.set(AUTH_KEY, token, { expires: 1, secure: true }); // Set expiry to 1 day
+        Cookies.set(AUTH_KEY, token, { expires: 1 / 24, secure: true });
 
         // Navigate to the dashboard
         router.replace("/dashboard");

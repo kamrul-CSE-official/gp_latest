@@ -1,43 +1,38 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 
 import { AUTH_KEY } from "@/constant/storage.key";
 import { IUserinfo } from "@/types/globelTypes";
-import getAuthToken from "./getAuthToken";
-import axiosInstance from "@/helper/axios/axiosInstance";
 
-export async function setCookies(name: string = AUTH_KEY, data: string) {
-  const cookieStore = await cookies();
-  cookieStore.set({
-    name: name,
-    value: data,
-    httpOnly: true,
-    path: "/",
-  });
-}
+export async function getUserInfo(): Promise<IUserinfo | null> {
+  const token = Cookies.get(AUTH_KEY) || null;
 
-export async function userInfo(): Promise<IUserinfo | null> {
-  const token = await getAuthToken(AUTH_KEY);
-  if (token) {
-    const decodedData: IUserinfo = jwtDecode(token);
+  if (!token) {
+    return null;
+  }
 
-    if (decodedData.EmpID) {
-      const userData = {
+  try {
+    const decodedData = (jwtDecode(token) as Partial<IUserinfo>) || {};
+    console.log(decodedData);
+
+    if (decodedData.exp && decodedData.username) {
+      return {
         EmpID: decodedData.EmpID,
         CompanyID: decodedData.CompanyID,
         CostCenterID: decodedData.CostCenterID,
         ServiceDepartmentID: decodedData.ServiceDepartmentID,
         SubCostCenterID: decodedData.SubCostCenterID,
         UserID: decodedData.UserID,
-        UserName: decodedData.UserName,
+        username: decodedData.username,
         iat: decodedData.iat,
+        exp: decodedData.exp,
       };
-
-      return userData;
     }
+  } catch (error) {
+    console.error("Error decoding token:", error);
   }
+
   return null;
 }
-
