@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AUTH_KEY } from "./constant/storage.key";
 
-const protectedRoutes = ["/dashboard"];
 const publicRoutes = ["/login", "/"];
 
 export default function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const isProtectedRoute = protectedRoutes.includes(pathname);
+  const isProtectedRoute = pathname.startsWith("/dashboard");
   const isPublicRoute = publicRoutes.includes(pathname);
 
   // Retrieve the auth token from cookies
