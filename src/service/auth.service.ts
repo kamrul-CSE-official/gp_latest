@@ -6,7 +6,6 @@ import { AUTH_KEY } from "@/constant/storage.key";
 
 export async function getUserInfo(): Promise<IUserinfo | null> {
   const token = Cookies.get(AUTH_KEY);
-  console.log("Token: ",token)
 
   if (!token) {
     return null;
@@ -14,7 +13,6 @@ export async function getUserInfo(): Promise<IUserinfo | null> {
 
   try {
     const decodedData = jwtDecode<IUserinfo>(token);
-    console.log(decodedData)
     if (decodedData.EmpID && decodedData.UserName) {
       return {
         EmpID: decodedData.EmpID,
@@ -29,7 +27,7 @@ export async function getUserInfo(): Promise<IUserinfo | null> {
       };
     }
   } catch (error) {
-    console.error("Error decoding token:", error);
+    console.log("Error decoding token:", error);
   }
 
   return null;

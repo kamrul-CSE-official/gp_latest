@@ -57,7 +57,7 @@ export default function GeneralAndMedicalUserInfo() {
           throw new Error("No employee data found");
         }
       } catch (error) {
-        console.error("Error fetching employee details:", error);
+        console.log("Error fetching employee details:", error);
         setEmployeeData(null);
       } finally {
         setIsLoading(false);

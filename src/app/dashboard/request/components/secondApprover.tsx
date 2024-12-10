@@ -38,7 +38,7 @@ export default function SecondApprover() {
           setSecondApprovers(response.data);
         }
       } catch (error) {
-        console.error("Error fetching approvers:", error);
+        console.log("Error fetching approvers:", error);
       }
     };
 

@@ -115,7 +115,7 @@ export default function GeneralTable() {
       }
     } catch (error) {
       toast.error("Failed to save gate pass request.");
-      console.error(error);
+      console.log(error);
     }
   };
 

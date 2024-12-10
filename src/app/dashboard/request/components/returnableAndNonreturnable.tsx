@@ -73,7 +73,7 @@ const ReturnableAndNonReturnable: React.FC = () => {
         setStores(response.data);
       } catch (error) {
         toast.error("Failed to fetch stores.");
-        console.error("Error fetching stores:", error);
+        console.log("Error fetching stores:", error);
       }
     };
     fetchStores();
@@ -96,7 +96,7 @@ const ReturnableAndNonReturnable: React.FC = () => {
         setItems(newItems);
       } catch (error) {
         toast.error("Failed to fetch items.");
-        console.error("Error fetching items:", error);
+        console.log("Error fetching items:", error);
       }
     }, 300),
     []

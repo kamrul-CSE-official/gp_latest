@@ -1,34 +1,32 @@
 "use client";
 
+import { ReactNode, useEffect } from "react";
 import { useUserDeatilsMutation } from "@/redux/features/user/userApi";
 import { setUserData } from "@/redux/features/user/userSlice";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { useAppDispatch } from "@/redux/hooks";
 import { getUserInfo } from "@/service/auth.service";
-import { IUserinfo } from "@/types/globelTypes";
-import { ReactNode, useEffect, useState } from "react";
 
 function PrivateProvider({ children }: { children: ReactNode }) {
-  const [userInfo, setUserInfo] = useState<IUserinfo | null>(null);
   const [userDetailsReq, { data: userDetails }] = useUserDeatilsMutation();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     async function fetchUserInfo() {
-      const userData = await getUserInfo();
-      setUserInfo(userData);
+      try {
+        const userData = await getUserInfo();
 
-      if (userData?.EmpID) {
-        const data = await userDetailsReq({
-          empno: userData.EmpID,
-        }).unwrap();
-        const userDetails = {...data[0], ...userData}
-        console.log("update: ",userDetails)
-        dispatch(setUserData(userDetails));
+        if (userData?.EmpID) {
+          const data = await userDetailsReq({ empno: userData.EmpID }).unwrap();
+          const userDetails = { ...data[0], ...userData };
+          dispatch(setUserData(userDetails));
+        }
+      } catch (error) {
+        console.log("Failed to fetch user info:", error);
       }
     }
 
     fetchUserInfo();
-  }, []);
+  }, [dispatch, userDetailsReq]);
 
   return <>{children}</>;
 }

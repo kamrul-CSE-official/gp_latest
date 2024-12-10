@@ -42,7 +42,7 @@ export default function FirstApprover() {
           setFirstApprovers(response.data);
         }
       } catch (error) {
-        console.error("Error fetching approvers:", error);
+        console.log("Error fetching approvers:", error);
       }
     };
 

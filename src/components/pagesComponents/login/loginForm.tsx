@@ -46,7 +46,7 @@ export default function LoginForm() {
         toast.error("Invalid credentials. Please try again!");
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
       toast.error("Something went wrong!");
     }
   };
