@@ -9,6 +9,13 @@ const userApi = api.injectEndpoints({
         body: data,
       }),
     }),
+    userDeatils: builder.mutation({
+      query: (data)=> ({
+        url: "/User/GetRequesterDetails",
+        method: "POST",
+        body: data
+      })
+    }),
     getSingleProduct: builder.query({
       query: (id) => `/products/${id}`,
     }),
@@ -20,11 +27,12 @@ const userApi = api.injectEndpoints({
       }),
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {
   useLoginUsersMutation,
+  useUserDeatilsMutation,
   useGetSingleProductQuery,
   usePostCommentMutation,
 } = userApi;

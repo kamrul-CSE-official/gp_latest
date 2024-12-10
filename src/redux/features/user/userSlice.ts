@@ -1,24 +1,31 @@
-  import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-  import { IEmployee } from "@/types/globelTypes";
-  
-  interface IUserinfo {
-    userData: IEmployee | null;  
-  }
-  
-  const initialState: IUserinfo = {
-    userData: null,
-  };
-  
-  const userSlice = createSlice({
-    name: "user",
-    initialState,
-    reducers: {
-      setUserData: (state, action: PayloadAction<IEmployee>) => {
-        state.userData = action.payload;
-      },
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { IUserinfo } from "@/types/globelTypes";
+
+// Define initial state
+interface IUserData {
+  userData: IUserinfo | null;
+}
+
+const initialState: IUserData = {
+  userData: null,
+};
+
+const userSlice = createSlice({
+  name: "user",
+  initialState,
+  reducers: {
+    setUserData: (state, action: PayloadAction<IUserinfo | null>) => {
+      state.userData = action.payload;
     },
-  });
-  
-  export const { setUserData } = userSlice.actions;
-  export default userSlice.reducer;
-  
+    updateUserData: (state, action: PayloadAction<IUserinfo | null>) => {
+      if (state.userData) {
+        state.userData = { ...state.userData, ...action.payload };
+      } else {
+        state.userData = action.payload;
+      }
+    },
+  },
+});
+
+export const { setUserData, updateUserData } = userSlice.actions;
+export default userSlice.reducer;

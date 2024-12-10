@@ -1,23 +1,21 @@
-"use server";
-
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
-
-import { AUTH_KEY } from "@/constant/storage.key";
 import { IUserinfo } from "@/types/globelTypes";
+import { AUTH_KEY } from "@/constant/storage.key";
+
 
 export async function getUserInfo(): Promise<IUserinfo | null> {
-  const token = Cookies.get(AUTH_KEY) || null;
+  const token = Cookies.get(AUTH_KEY);
+  console.log("Token: ",token)
 
   if (!token) {
     return null;
   }
 
   try {
-    const decodedData = (jwtDecode(token) as Partial<IUserinfo>) || {};
-    console.log(decodedData);
-
-    if (decodedData.exp && decodedData.username) {
+    const decodedData = jwtDecode<IUserinfo>(token);
+    console.log(decodedData)
+    if (decodedData.EmpID && decodedData.UserName) {
       return {
         EmpID: decodedData.EmpID,
         CompanyID: decodedData.CompanyID,
@@ -25,7 +23,7 @@ export async function getUserInfo(): Promise<IUserinfo | null> {
         ServiceDepartmentID: decodedData.ServiceDepartmentID,
         SubCostCenterID: decodedData.SubCostCenterID,
         UserID: decodedData.UserID,
-        username: decodedData.username,
+        UserName: decodedData.UserName,
         iat: decodedData.iat,
         exp: decodedData.exp,
       };

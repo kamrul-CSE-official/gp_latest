@@ -20,7 +20,7 @@ const uiApi = api.injectEndpoints({
       }),
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {

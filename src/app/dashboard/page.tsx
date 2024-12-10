@@ -1,34 +1,26 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { getUserInfo } from "@/service/auth.service";
-import { IUserinfo } from "@/types/globelTypes";
+import React from "react";
+import { useAppSelector } from "@/redux/hooks";
+import { RootState } from "@/redux/store";
 
 const UserInfoDisplay: React.FC = () => {
-  const [userInfo, setUserInfo] = useState<IUserinfo | null>(null);
+  const userDetails = useAppSelector((state: RootState)=> state.user.userData);
+  
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      const data = await getUserInfo();
-      setUserInfo(data);
-    };
-
-    fetchUserInfo();
-  }, []);
-
-  console.log("User: ", userInfo);
+  
 
   return (
     <div>
-      {userInfo ? (
+      {userDetails ? (
         <div>
-          <h1>Welcome, {userInfo.username}</h1>
-          <p>Employee ID: {userInfo.EmpID}</p>
-          <p>Company ID: {userInfo.CompanyID}</p>
-          <p>Cost Center ID: {userInfo.CostCenterID}</p>
-          <p>Service Department ID: {userInfo.ServiceDepartmentID}</p>
-          <p>Sub Cost Center ID: {userInfo.SubCostCenterID}</p>
-          <p>User ID: {userInfo.UserID}</p>
+          <h1>Welcome, {userDetails?.UserName}</h1>
+          <p>Employee ID: {userDetails.EmpID}</p>
+          <p>Company ID: {userDetails.CompanyID}</p>
+          <p>Cost Center ID: {userDetails.CostCenterID}</p>
+          <p>Service Department ID: {userDetails.ServiceDepartmentID}</p>
+          <p>Sub Cost Center ID: {userDetails.SubCostCenterID}</p>
+          <p>User ID: {userDetails.UserID}</p>
         </div>
       ) : (
         <p>Loading user information...</p>

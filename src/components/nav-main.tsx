@@ -28,7 +28,7 @@ export function NavMain({
     icon?: LucideIcon;
     isActive?: boolean;
     items?: {
-      title?: string;
+      title: string;
       url: string;
     }[];
   }[];
@@ -64,7 +64,7 @@ export function NavMain({
                   <SidebarMenuSub>
                     {item.items?.map((subItem) => {
                       // Check if the subitem's URL matches the current path
-                      const isSubItemActive = pathname?.includes(subItem?.url);
+                      const isSubItemActive = pathname?.includes(subItem.url);
 
                       return (
                         <SidebarMenuSubItem key={subItem.title}>

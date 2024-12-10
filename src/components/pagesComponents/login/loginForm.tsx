@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
@@ -20,8 +20,7 @@ type Inputs = {
 
 export default function LoginForm() {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
-  const [authData, { isLoading, isSuccess, data: loginData }] =
-    useLoginUsersMutation();
+  const [loginUsers, { isLoading, isSuccess, error }] = useLoginUsersMutation();
   const router = useRouter();
 
   const {
@@ -33,15 +32,14 @@ export default function LoginForm() {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
-      await authData(data);
-      if (isSuccess) {
-        const token = loginData?.token;
+      const result = await loginUsers(data).unwrap();
 
+      if (result?.jwtToken) {
         // Store the token in cookies
-        Cookies.set(AUTH_KEY, token, { expires: 1 / 24, secure: true });
+        Cookies.set(AUTH_KEY, result.jwtToken, { expires: 1 / 24, secure: true });
 
         // Navigate to the dashboard
-        router.replace("/dashboard");
+        router.replace("/dashboard/profile");
         toast.success("Login successful.");
         reset();
       } else {
@@ -52,6 +50,12 @@ export default function LoginForm() {
       toast.error("Something went wrong!");
     }
   };
+
+  useEffect(() => {
+    if (error) {
+      toast.error("Invalid credentials. Please try again!");
+    }
+  }, [error]);
 
   return (
     <div className="flex justify-center items-center lg:min-h-screen dark:bg-inherit px-4">

@@ -1,15 +1,27 @@
 export interface IUserinfo {
-  username: string;
-  UserID?: number;
-  EmpID?: number | string;
-  CompanyID?: number;
-  CostCenterID?: number;
-  SubCostCenterID?: number;
-  ServiceDepartmentID?: number;
+  EmpID: number;
+  CompanyID: number;
+  CostCenterID: number;
+  ServiceDepartmentID: number;
+  SubCostCenterID: number;
+  UserID: number;
+  UserName: string;
   iat: number;
   exp: number;
-}
 
+  $id?: string;
+  Company?: string;
+  CostCenter?: string;
+  EMPNO?: string;
+  FullName?: string;
+  GRP_EMP_NO?: number;
+  Image?: string;
+  ImageBase64?: string;
+  ItemImage?: string | null;
+  Location?: string;
+  SectionName?: string;
+  SubCostCenter?: string;
+}
 
 export interface IEmployee {
   $id: string;
